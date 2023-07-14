@@ -1,3 +1,4 @@
+import Footer from '../Layouts/Footer';
 export default function Home() {
   return (
     <>
