@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 
 export default function MainLayout() {
   return (
-    <div className="w-full p-3">
+    <div className="w-full p-3 bg-white">
       <Navbar />
       <div className="pt-16">
         <Outlet />
