@@ -48,24 +48,6 @@ export default function Navbar() {
               <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
                 <Link to="/blog">Blog</Link>
               </button>
-
-              {user?.email ? (
-                <>
-                  <label
-                    htmlFor="dashboard-drawer"
-                    className="btn  my-2 drawer-button"
-                  >
-                    Open drawer
-                  </label>
-                  <Link to="/dashboard" className="justify-between">
-                    Dashboard
-                  </Link>
-                </>
-              ) : (
-                <button className="btn-sm btn-outline btn-secondery my-2 rounded-lg ">
-                  <Link to="/login">Login</Link>
-                </button>
-              )}
             </ul>
           </div>
           <div className="avatar online placeholder">
@@ -77,9 +59,9 @@ export default function Navbar() {
             to="/"
             className="btn btn-ghost normal-case font-semibold text-2xl"
           >
-            RT
+            MBC
             <sub className="text-green-500">
-              <small>ReliableTech</small>
+              <small>My Book Catalog</small>
             </sub>
           </Link>
         </div>
@@ -103,7 +85,7 @@ export default function Navbar() {
               </button>
             </li>
 
-            {user?.email ? (
+            {/* {user?.email ? (
               <li>
                 <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
                   <Link to="/dashboard" className="justify-between">
@@ -117,10 +99,10 @@ export default function Navbar() {
                   <Link to="/login">Login</Link>
                 </button>
               </li>
-            )}
+            )} */}
           </ul>
         </div>
-        <div className="navbar-end">
+        {/* <div className="navbar-end">
           {user?.email && (
             <>
               <div className="badge badge-outline">{user?.email}</div>
@@ -129,7 +111,7 @@ export default function Navbar() {
               </button>
             </>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

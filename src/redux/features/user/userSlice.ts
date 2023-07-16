@@ -8,7 +8,6 @@ import { auth } from '../../../lib/firebase';
 interface IUserState {
   user: {
     email: string | null;
-    role?: string;
   };
   isLoading: boolean;
   isError: boolean;
