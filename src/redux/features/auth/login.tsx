@@ -1,10 +1,4 @@
-import {
-  useRef,
-  useState,
-  useEffect,
-  SetStateAction,
-  SetStateAction,
-} from 'react';
+import { useRef, useState, useEffect, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
@@ -23,7 +17,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    userRef.current?.focus();
+    (userRef.current as unknown as HTMLInputElement)?.focus();
   }, []);
 
   useEffect(() => {

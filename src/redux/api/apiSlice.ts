@@ -1,6 +1,7 @@
 import {
   BaseQueryApi,
   FetchArgs,
+  FetchBaseQueryError,
   createApi,
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
@@ -15,11 +16,15 @@ import { logOut, setCredentials } from '../features/auth/authSlice';
 
 // api slice with access token
 
+type CustomFetchBaseQueryError = FetchBaseQueryError & {
+  originalStatus: number;
+};
+
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:5000/api/v1',
   credentials: 'include',
-  prepareHeaders: (headers, { getState }: unknown) => {
-    const token = getState().auth.token;
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as { auth: { token: string } }).auth.token;
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
@@ -34,13 +39,13 @@ const baseQueryWithReauth = async (
 ) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  if (result?.error?.originalStatus === 403) {
+  if ((result?.error as CustomFetchBaseQueryError)?.originalStatus === 403) {
     console.log('sending refresh token');
     // send refresh token to get new access token
-    const refreshResult = await baseQuery('/refresh', api, extraOptions);
+    const refreshResult = await baseQuery('/refresh-token', api, extraOptions);
     console.log(refreshResult);
     if (refreshResult?.data) {
-      const user = api.getState().auth.user;
+      const user = (api.getState() as { auth: { user: string } }).auth.user;
       // store the new token
       api.dispatch(setCredentials({ ...refreshResult.data, user }));
       // retry the original query with new access token
