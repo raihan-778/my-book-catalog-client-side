@@ -37,17 +37,21 @@ export default function Navbar() {
               tabIndex={0}
               className="menu menu-compact bg-[#ECECEC] dropdown-content mt-3 p-2 shadow text-slate-600 rounded-box w-52"
             >
-              <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
-                <Link to="/">Home</Link>
-              </button>
-
-              <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
-                <Link to="/allproducts">All Products</Link>
-              </button>
-
-              <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
-                <Link to="/blog">Blog</Link>
-              </button>
+              <Link to="/">
+                <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
+                  Home
+                </button>
+              </Link>
+              <Link to="/allproducts">
+                <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
+                  All Books
+                </button>
+              </Link>
+              <Link to="/blog">
+                <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
+                  Login
+                </button>
+              </Link>
             </ul>
           </div>
           <div className="avatar online placeholder">
@@ -68,21 +72,25 @@ export default function Navbar() {
         <div className="navbar-center  hidden lg:flex">
           <ul className="menu menu-horizontal p-0">
             <li>
-              <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                <Link to="/">Home</Link>
-              </button>
+              <Link to="/">
+                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
+                  Home
+                </button>
+              </Link>
             </li>
 
             <li>
-              <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                <Link to="/allproducts">All Products</Link>
-              </button>
+              <Link to="/allproducts">
+                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg "></button>
+                All Books
+              </Link>
             </li>
 
             <li>
-              <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                <Link to="/blog">Blog</Link>
-              </button>
+              <Link to="/blog">
+                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg "></button>
+                Blog
+              </Link>
             </li>
 
             {/* {user?.email ? (
