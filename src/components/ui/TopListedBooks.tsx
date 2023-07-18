@@ -3,7 +3,7 @@ import { useGetAllBooksQuery } from '../../redux/features/books/bookApi';
 import { IBook } from '../../types/globalTypes';
 
 export default function TopListedBooks() {
-  const { data, isLoading, error } = useGetAllBooksQuery(undefined);
+  const { data } = useGetAllBooksQuery(undefined);
   console.log(data);
 
   return (
