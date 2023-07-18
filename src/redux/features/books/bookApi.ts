@@ -1,30 +1,30 @@
 import { api } from '../../api/apiSlice';
 
-const productApi = api.injectEndpoints({
+const bookApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllBooks: builder.query({
       query: () => '/books',
     }),
-    singleProduct: builder.query({
-      query: (id) => `/product/${id}`,
+    singleBook: builder.query({
+      query: (id) => `/books/${id}`,
     }),
-    postComment: builder.mutation({
+    postReview: builder.mutation({
       query: ({ data, id }) => ({
-        url: `/comment/${id}`,
+        url: `/reviews/${id}`,
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['comments'],
+      invalidatesTags: ['reviews'],
     }),
-    getComments: builder.query({
-      query: (id) => `/comment/${id}`,
-      providesTags: ['comments'],
+    getReview: builder.query({
+      query: (id) => `/reviews/${id}`,
+      providesTags: ['reviews'],
     }),
   }),
 });
 export const {
-  useGetCommentsQuery,
-  useGetProductsQuery,
-  usePostCommentMutation,
-  useSingleProductQuery,
-} = productApi;
+  useGetAllBooksQuery,
+  useSingleBookQuery,
+  useGetReviewQuery,
+  usePostReviewMutation,
+} = bookApi;

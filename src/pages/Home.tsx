@@ -1,4 +1,5 @@
 import Footer from '../Layouts/Footer';
+import TopListedBooks from '../components/ui/TopListedBooks';
 export default function Home() {
   return (
     <>
@@ -80,14 +81,16 @@ export default function Home() {
 
           <div className="mt-8">
             <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-              Welcome Back, Barry!
+              Welcome To My Book Catalog
             </h1>
 
             <p className="mt-1.5 text-sm text-gray-500">
-              Your website has seen a 52% increase in traffic in the last month.
-              Keep it up! 🚀
+              Find The Authentic Book Here
             </p>
           </div>
+        </div>
+        <div className="">
+          <TopListedBooks />
         </div>
       </header>
       <Footer />

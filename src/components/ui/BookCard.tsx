@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function BookCard() {
   return (
-    <div className="card w-full transition hover:-translate-y-3  hover:all ease-in-out mx-auto card-compact bg-[#e2e9f1] text-slate-500 shadow-xl">
+    <div className="card w-full transition hover:  hover:all ease-in-out mx-auto card-compact bg-[#e2e9f1] text-slate-500 shadow-xl">
       <figure className="rounded-xl mt-3 p-3">
         <img
           src="/public/11_e272e529-4c81-454b-b9ff-99dcfba814f1_1024x1024.webp"

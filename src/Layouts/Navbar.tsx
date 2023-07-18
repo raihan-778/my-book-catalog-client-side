@@ -56,7 +56,7 @@ export default function Navbar() {
           </div>
           <div className="avatar online placeholder">
             <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
-              <img src="https://i.ibb.co/NNNYxtS/logo.jpg" alt="logo" />
+              <img src="/book-logo.jpg" alt="logo" />
             </div>
           </div>
           <Link

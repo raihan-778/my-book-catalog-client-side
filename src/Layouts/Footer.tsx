@@ -37,40 +37,39 @@ export default function Footer() {
             </div>
           </fieldset>
         </div>
-        <footer className="footer p-5 rounded-xl ">
+        <footer className="footer p-5  rounded-xl ">
           <div>
-            <span className="footer-title lg:text-2xl md:text-2xl text-xl font-bold  text-[#0014FF] ">
+            <span className="footer-title lg:text-xl md:text-xl text-xl font-bold  text-[#0014FF] ">
               Our Services
             </span>
             <Link to="/" className="link link-hover">
               Ontime Delivery
             </Link>
             <Link to="/" className="link link-hover">
-              Best Quality Products
+              Authentic Book Collection
             </Link>
+
             <Link to="/" className="link link-hover">
-              Trusted seller
-            </Link>
-            <Link to="/" className="link link-hover">
-              Customers Setisfection
+              Readers Setisfection
             </Link>
           </div>
+
           <div>
-            <span className="footer-title lg:text-2xl md:text-2xl text-xl font-bold text-[#0014FF]">
-              About ReliableTech
+            <span className="footer-title lg:text-xl md:text-xl text-xl font-bold  text-[#0014FF]">
+              Our Address
             </span>
             <Link to="/" className="link link-hover">
-              Company Info
+              Citygate, Chittagong, Bangladesh.
             </Link>
             <Link to="/" className="link link-hover">
-              Investors
+              <strong>Phone Number:</strong> +8801945433032
             </Link>
             <Link to="/" className="link link-hover">
-              Career
+              <strong>Email:</strong> raihanarif778@gmail.com
             </Link>
           </div>
           <div>
-            <span className="footer-title lg:text-2xl md:text-2xl text-xl font-bold  text-[#0014FF]">
+            <span className="footer-title lg:text-xl md:text-xl text-xl font-bold  text-[#0014FF]">
               Stay Connected
             </span>
             <div className="grid grid-cols-4 mx-auto gap-2">
@@ -87,20 +86,6 @@ export default function Footer() {
                 <FaInstagram className="lg:text-2xl md:text-2xl text-xl text-[#D02D2D]  transition hover:scale-110  hover:all hover:text-[#FC7300]  ease-in-out "></FaInstagram>
               </Link>
             </div>
-          </div>
-          <div>
-            <span className="footer-title lg:text-2xl md:text-2xl text-xl font-bold  text-[#0014FF]">
-              Our Address
-            </span>
-            <Link to="/" className="link link-hover">
-              Citygate, Chittagong, Bangladesh.
-            </Link>
-            <Link to="/" className="link link-hover">
-              <strong>Phone Number:</strong> +8801945433032
-            </Link>
-            <Link to="/" className="link link-hover">
-              <strong>Email:</strong> raihanarif778@gmail.com
-            </Link>
           </div>
         </footer>
       </section>
