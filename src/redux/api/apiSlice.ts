@@ -35,6 +35,7 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   extraOptions: {}
 ) => {
   let result = await baseQuery(args, api, extraOptions);
