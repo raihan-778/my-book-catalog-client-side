@@ -42,12 +42,12 @@ export default function Navbar() {
                   Home
                 </button>
               </Link>
-              <Link to="/allproducts">
+              <Link to="/books">
                 <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
                   All Books
                 </button>
               </Link>
-              <Link to="/blog">
+              <Link to="/login">
                 <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
                   Login
                 </button>
@@ -80,16 +80,17 @@ export default function Navbar() {
             </li>
 
             <li>
-              <Link to="/allproducts">
+              <Link to="/books">
                 <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg "></button>
                 All Books
               </Link>
             </li>
 
             <li>
-              <Link to="/blog">
-                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg "></button>
-                Blog
+              <Link to="/login">
+                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
+                  login
+                </button>
               </Link>
             </li>
 

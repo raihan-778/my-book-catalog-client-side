@@ -1,98 +1,136 @@
-import { useRef, useState, useEffect, SetStateAction } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
-import { useDispatch } from 'react-redux';
-import { useLoginMutation } from '../redux/features/auth/authApi';
-import { setCredentials } from '../redux/features/auth/authSlice';
+import { GoogleAuthProvider } from 'firebase/auth';
 
-const Login = () => {
-  const userRef = useRef();
-  const errRef = useRef();
-  const [user, setUser] = useState('');
-  const [pwd, setPwd] = useState('');
-  const [errMsg, setErrMsg] = useState('');
+import { useForm } from 'react-hook-form';
+
+import {  useLocation, useNavigate } from 'react-router-dom';
+
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
+
+interface LoginFormInputs {
+  email: string;
+  password: string;
+}
+
+
+export function Login({className, ...props}:UserAuthFormProps) => {
+
+
+ 
+
+  const location = useLocation();
   const navigate = useNavigate();
+  const from = location.state?.from?.pathname || '/';
 
-  const [login, { isLoading }] = useLoginMutation();
-  const dispatch = useDispatch();
+  const googleProvider = new GoogleAuthProvider();
 
-  useEffect(() => {
-    (userRef.current as unknown as HTMLInputElement)?.focus();
-  }, []);
+  if (user) {
+    navigate(from, { replace: true });
+  }
 
-  useEffect(() => {
-    setErrMsg('');
-  }, [user, pwd]);
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const handleLogin = (data) => {
+    console.log(data);
+    login(data.email, data.password)
+      .then((result) => {
+        const user = result.user;
+        console.log(data.email);
+        setLoginUseremail(data.email);
+        user.uid && toast.success('User login successfully');
 
-    try {
-      const userData = await login({ user, pwd }).unwrap();
-      dispatch(setCredentials({ ...userData, user }));
-      setUser('');
-      setPwd('');
-      navigate('/welcome');
-    } catch (err) {
-      if (!err?.originalStatus) {
-        // isLoading: true until timeout occurs
-        setErrMsg('No Server Response');
-      } else if (err.originalStatus === 400) {
-        setErrMsg('Missing Username or Password');
-      } else if (err.originalStatus === 401) {
-        setErrMsg('Unauthorized');
-      } else {
-        setErrMsg('Login Failed');
-      }
-      (userRef.current as unknown as HTMLInputElement)?.focus();
-    }
+        setLoginError('');
+      })
+      .catch((err) => {
+        console.error(err.message);
+        setLoginError(err.message);
+      });
+  };
+  const handleGoogleSignIn = () => {
+    googleSignIn(googleProvider)
+      .then((result) => console.log(result.user))
+      .catch((err) => console.error(err.message));
   };
 
-  const handleUserInput = (e: { target: { value: SetStateAction<string> } }) =>
-    setUser(e.target.value);
+  return (
+    <div className="flex bg-[#0A2647] my-5 mx-auto  h-[800px] justify-center  items-center">
+      <div>
+        <h2 className="text-xl  font-bold">Login</h2>
+        <form onSubmit={handleSubmit(handleLogin)}>
+          <div className="form-control w-full max-w-xs">
+            <label className="label">
+              <span className="label-text">Enter Your Email</span>
+            </label>
+            <input
+              type="email"
+              placeholder="Type here"
+              className="input input-bordered w-full max-w-xs"
+              {...register('email', { required: 'Email Address is required' })}
+              aria-invalid={errors.email ? 'true' : 'false'}
+            />
+            {errors.email && (
+              <p className="text-red-500" role="alert">
+                {errors.email?.message}
+              </p>
+            )}
+          </div>
+          <div className="form-control w-full max-w-xs">
+            <label className="label">
+              <span className="label-text">Enter Password</span>
+            </label>
+            <input
+              type="password"
+              placeholder="Type here"
+              className="input input-bordered w-full max-w-xs"
+              {...register('password', {
+                required: 'Password is required',
+              })}
+              aria-invalid={errors.password ? 'true' : 'false'}
+            />
+            {errors.password && (
+              <p className="text-red-500" role="alert">
+                {errors.password?.message}
+              </p>
+            )}
+          </div>
+          <label className="label">
+            <span className="label-text">Forgot Password?</span>
+          </label>
 
-  const handlePwdInput = (e: { target: { value: SetStateAction<string> } }) =>
-    setPwd(e.target.value);
-
-  const content = isLoading ? (
-    <h1>Loading...</h1>
-  ) : (
-    <section className="login">
-      <p
-        ref={errRef}
-        className={errMsg ? 'errmsg' : 'offscreen'}
-        aria-live="assertive"
-      >
-        {errMsg}
-      </p>
-
-      <h1>User Login</h1>
-
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          ref={userRef}
-          value={user}
-          onChange={handleUserInput}
-          autoComplete="off"
-          required
-        />
-
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          onChange={handlePwdInput}
-          value={pwd}
-          required
-        />
-        <button>Sign In</button>
-      </form>
-    </section>
+          <input
+            className="btn mt-5 w-full max-w-xs btn-accent"
+            value="Login"
+            type="submit"
+          />
+          {loginError && (
+            <p className="text-orange-500 font-semibold">
+              Wrong email or Password!!
+            </p>
+          )}
+          <label className="label">
+            <span className="label-text">
+              New to doctors portal!{' '}
+              <Link to="/signup" className="text-secondary">
+                Create New Account.
+              </Link>
+            </span>
+          </label>
+          <div className="divider">OR</div>
+          <button
+            onClick={handleGoogleSignIn}
+            className="btn btn-outline w-full"
+          >
+            CONTINUE WITH GOOGLE
+          </button>
+        </form>
+      </div>
+    </div>
   );
-
-  return content;
 };
-export default Login;
+
+
