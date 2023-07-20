@@ -8,17 +8,13 @@ import {
 import { auth } from '../../../lib/firebase';
 
 interface IUserState {
-  user: {
-    email: string | null;
-  };
+  user: null;
   isLoading: boolean;
   isError: boolean;
   error: string | null;
 }
 const initialState: IUserState = {
-  user: {
-    email: null,
-  },
+  user: null,
   isLoading: false,
   isError: false,
   error: null,
@@ -100,5 +96,7 @@ const userSlice = createSlice({
       });
   },
 });
+
 export const { setUser, setLoading } = userSlice.actions;
 export default userSlice.reducer;
+//handle observer

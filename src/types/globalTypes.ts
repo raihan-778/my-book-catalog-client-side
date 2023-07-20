@@ -7,3 +7,7 @@ export type IBook = {
   publicationDate: string;
   Reviewa: string[];
 };
+
+export type IUser = {
+  email: string;
+};

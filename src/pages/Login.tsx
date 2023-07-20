@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { GoogleAuthProvider } from 'firebase/auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { useForm } from 'react-hook-form';
-import { googleLoginUser, loginUser } from '../redux/features/user/userSlice';
+import {
+  googleLoginUser,
+  loginUser,
+  setUser,
+} from '../redux/features/user/userSlice';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 // if (user) {
 //   navigate(from, { replace: true });
@@ -20,12 +25,7 @@ interface LoginFormInputs {
 //   navigate(from, { replace: true });
 // }
 
-export function Login({ className, ...props }: UserAuthFormProps) {
-  const [loginError, setLoginError] = useState('');
-  // if (user) {
-  //   navigate(from, { replace: true });
-  // }
-
+export default function Login({ className, ...props }: UserAuthFormProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || '/';
@@ -40,6 +40,20 @@ export function Login({ className, ...props }: UserAuthFormProps) {
   const dispatch = useAppDispatch();
 
   const { state } = useAppSelector((state) => state.state);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log(currentUser);
+        dispatch(setUser(currentUser));
+      }
+
+      dispatch(isLoading(false));
+    });
+
+    return () => unsubscribe();
+  }, [dispatch]);
+
   const onSubmit = (data: LoginFormInputs) => {
     console.log(data);
     dispatch(
@@ -115,11 +129,7 @@ export function Login({ className, ...props }: UserAuthFormProps) {
             value="Login"
             type="submit"
           />
-          {loginError && (
-            <p className="text-orange-500 font-semibold">
-              Wrong email or Password!!
-            </p>
-          )}
+
           <label className="label">
             <span className="label-text">
               New to My Book Catalog

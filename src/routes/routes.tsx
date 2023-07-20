@@ -5,10 +5,11 @@ import Home from '../pages/Home';
 import BookDetails from '../pages/BookDetails';
 import PrivateRoute from './PrivateRoute';
 import EditBook from '../pages/EditBook';
-import Login from '../pages/Login';
-import SignUp from '../pages/SignUp';
+
 import NotFound from '../pages/NotFound';
 import Books from '../pages/Books';
+import Login from '../pages/Login';
+import SignUp from '../pages/SignUp';
 
 const routes = createBrowserRouter([
   {
