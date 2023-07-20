@@ -1,7 +1,9 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from 'firebase/auth';
 import { auth } from '../../../lib/firebase';
 
@@ -27,6 +29,8 @@ interface ICredential {
   password: string;
 }
 
+const googleProvider = new GoogleAuthProvider();
+
 export const createUser = createAsyncThunk(
   'user/create-user',
   async ({ email, password }: ICredential) => {
@@ -40,6 +44,13 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }: ICredential) => {
     const data = await signInWithEmailAndPassword(auth, email, password);
 
+    return data.user.email;
+  }
+);
+export const googleLoginUser = createAsyncThunk(
+  'user/google-login-user',
+  async () => {
+    const data = await signInWithPopup(auth, googleProvider);
     return data.user.email;
   }
 );

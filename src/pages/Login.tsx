@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { GoogleAuthProvider } from 'firebase/auth';
-
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { useForm } from 'react-hook-form';
+import { googleLoginUser, loginUser } from '../redux/features/user/userSlice';
 
-import {  useLocation, useNavigate } from 'react-router-dom';
+// if (user) {
+//   navigate(from, { replace: true });
+// }
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -12,67 +16,70 @@ interface LoginFormInputs {
   email: string;
   password: string;
 }
+// if (user) {
+//   navigate(from, { replace: true });
+// }
 
-
-export function Login({className, ...props}:UserAuthFormProps) => {
-
-
- 
+export function Login({ className, ...props }: UserAuthFormProps) {
+  const [loginError, setLoginError] = useState('');
+  // if (user) {
+  //   navigate(from, { replace: true });
+  // }
 
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || '/';
 
-  const googleProvider = new GoogleAuthProvider();
-
-  if (user) {
-    navigate(from, { replace: true });
-  }
-
   const {
     register,
-    formState: { errors },
     handleSubmit,
-  } = useForm();
+    formState: { errors },
+  } = useForm<LoginFormInputs>();
+  const { user, isLoading } = useAppSelector((state) => state.user);
 
-  const handleLogin = (data) => {
+  const dispatch = useAppDispatch();
+
+  const { state } = useAppSelector((state) => state.state);
+  const onSubmit = (data: LoginFormInputs) => {
     console.log(data);
-    login(data.email, data.password)
-      .then((result) => {
-        const user = result.user;
-        console.log(data.email);
-        setLoginUseremail(data.email);
-        user.uid && toast.success('User login successfully');
-
-        setLoginError('');
+    dispatch(
+      loginUser({
+        email: data.email,
+        password: data.password,
       })
-      .catch((err) => {
-        console.error(err.message);
-        setLoginError(err.message);
-      });
+    );
   };
-  const handleGoogleSignIn = () => {
-    googleSignIn(googleProvider)
-      .then((result) => console.log(result.user))
-      .catch((err) => console.error(err.message));
+  const googleLogin = () => {
+    dispatch(googleLoginUser());
   };
+
+  useEffect(() => {
+    if (user.email && !isLoading) {
+      navigate(from, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.email, isLoading]);
 
   return (
     <div className="flex bg-[#0A2647] my-5 mx-auto  h-[800px] justify-center  items-center">
       <div>
         <h2 className="text-xl  font-bold">Login</h2>
-        <form onSubmit={handleSubmit(handleLogin)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-control w-full max-w-xs">
             <label className="label">
               <span className="label-text">Enter Your Email</span>
             </label>
             <input
-              type="email"
-              placeholder="Type here"
               className="input input-bordered w-full max-w-xs"
-              {...register('email', { required: 'Email Address is required' })}
-              aria-invalid={errors.email ? 'true' : 'false'}
+              id="email"
+              placeholder="name@example.com"
+              type="email"
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect="off"
+              {...register('email', { required: 'Email is required' })}
             />
+
             {errors.email && (
               <p className="text-red-500" role="alert">
                 {errors.email?.message}
@@ -84,14 +91,15 @@ export function Login({className, ...props}:UserAuthFormProps) => {
               <span className="label-text">Enter Password</span>
             </label>
             <input
-              type="password"
-              placeholder="Type here"
               className="input input-bordered w-full max-w-xs"
-              {...register('password', {
-                required: 'Password is required',
-              })}
-              aria-invalid={errors.password ? 'true' : 'false'}
+              id="password"
+              placeholder="your password"
+              type="password"
+              autoCapitalize="none"
+              autoComplete="password"
+              {...register('password', { required: 'Password is required' })}
             />
+
             {errors.password && (
               <p className="text-red-500" role="alert">
                 {errors.password?.message}
@@ -114,23 +122,18 @@ export function Login({className, ...props}:UserAuthFormProps) => {
           )}
           <label className="label">
             <span className="label-text">
-              New to doctors portal!{' '}
+              New to My Book Catalog
               <Link to="/signup" className="text-secondary">
                 Create New Account.
               </Link>
             </span>
           </label>
           <div className="divider">OR</div>
-          <button
-            onClick={handleGoogleSignIn}
-            className="btn btn-outline w-full"
-          >
+          <button onClick={googleLogin} className="btn btn-outline w-full">
             CONTINUE WITH GOOGLE
           </button>
         </form>
       </div>
     </div>
   );
-};
-
-
+}
