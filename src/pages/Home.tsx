@@ -16,6 +16,7 @@ export default function Home() {
                 <input
                   className="h-10 w-full rounded-full border-none bg-white pe-10 ps-4 text-sm shadow-sm sm:w-56"
                   id="search"
+                 value={searchQuery} onChange={handleSearchChange} 
                   type="search"
                   placeholder="Search website..."
                 />
