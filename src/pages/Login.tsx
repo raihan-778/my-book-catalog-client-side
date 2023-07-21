@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -6,16 +6,16 @@ import { useForm } from 'react-hook-form';
 import {
   googleLoginUser,
   loginUser,
+  setLoading,
   setUser,
 } from '../redux/features/user/userSlice';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { toast } from 'react-toastify';
 
 // if (user) {
 //   navigate(from, { replace: true });
 // }
-
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 interface LoginFormInputs {
   email: string;
@@ -25,7 +25,7 @@ interface LoginFormInputs {
 //   navigate(from, { replace: true });
 // }
 
-export default function Login({ className, ...props }: UserAuthFormProps) {
+export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || '/';
@@ -39,16 +39,14 @@ export default function Login({ className, ...props }: UserAuthFormProps) {
 
   const dispatch = useAppDispatch();
 
-  const { state } = useAppSelector((state) => state.state);
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        console.log(currentUser);
-        dispatch(setUser(currentUser));
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user);
+        dispatch(setUser(user as unknown as string)); // Assuming setUser action correctly handles a 'User' object
       }
 
-      dispatch(isLoading(false));
+      dispatch(setLoading(false));
     });
 
     return () => unsubscribe();
@@ -69,6 +67,7 @@ export default function Login({ className, ...props }: UserAuthFormProps) {
 
   useEffect(() => {
     if (user.email && !isLoading) {
+      toast.success(`User ${user.email} login Successfully`);
       navigate(from, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,6 +128,12 @@ export default function Login({ className, ...props }: UserAuthFormProps) {
             value="Login"
             type="submit"
           />
+
+          {errors && (
+            <p className="text-orange-500 font-semibold">
+              Wrong email or Password!!
+            </p>
+          )}
 
           <label className="label">
             <span className="label-text">

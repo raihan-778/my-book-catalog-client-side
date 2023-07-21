@@ -8,13 +8,21 @@ import {
 import { auth } from '../../../lib/firebase';
 
 interface IUserState {
-  user: null;
+  user: {
+    email: string | null;
+    name?: {
+      firstName: string | null;
+      lastName: string | null;
+    };
+  };
   isLoading: boolean;
   isError: boolean;
   error: string | null;
 }
 const initialState: IUserState = {
-  user: null,
+  user: {
+    email: null,
+  },
   isLoading: false,
   isError: false,
   error: null,
@@ -39,7 +47,7 @@ export const loginUser = createAsyncThunk(
   'user/login-user',
   async ({ email, password }: ICredential) => {
     const data = await signInWithEmailAndPassword(auth, email, password);
-
+    console.log(data);
     return data.user.email;
   }
 );

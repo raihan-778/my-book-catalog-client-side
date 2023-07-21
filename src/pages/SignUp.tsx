@@ -1,25 +1,16 @@
-import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Link } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import {
-  createUser,
-  googleLoginUser,
-  setUser,
-} from '../redux/features/user/userSlice';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../lib/firebase';
-
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
+import { useAppDispatch } from '../redux/hooks';
+import { createUser, googleLoginUser } from '../redux/features/user/userSlice';
 
 interface SignupFormInputs {
   email: string;
   password: string;
 }
 
-export default function SignUp({ className, ...props }: UserAuthFormProps) {
+export default function SignUp() {
   const {
     register,
     handleSubmit,

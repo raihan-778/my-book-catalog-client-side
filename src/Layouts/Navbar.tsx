@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { setUser } from '../redux/features/user/userSlice';
+import { signOut } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 export default function Navbar() {
   const [fix, setFix] = useState(false);
@@ -9,6 +13,16 @@ export default function Navbar() {
       setFix(true);
     }
     setFix(false);
+  };
+
+  const { user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const handlaLogout = () => {
+    console.log('logout');
+
+    signOut(auth).then(() => {
+      dispatch(setUser(null));
+    });
   };
 
   window.addEventListener('scroll', setFixed);
@@ -47,11 +61,22 @@ export default function Navbar() {
                   All Books
                 </button>
               </Link>
-              <Link to="/login">
-                <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
-                  Login
-                </button>
-              </Link>
+              {user?.email ? (
+                <li>
+                  <button
+                    onClick={handlaLogout}
+                    className="btn-sm btn-outline btn-accent mx-2 rounded-lg "
+                  >
+                    Logout
+                  </button>
+                </li>
+              ) : (
+                <li>
+                  <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
+                    <Link to="/login">Login</Link>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
           <div className="avatar online placeholder">
@@ -81,25 +106,19 @@ export default function Navbar() {
 
             <li>
               <Link to="/books">
-                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg "></button>
-                All Books
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/login">
                 <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                  login
+                  All Books
                 </button>
               </Link>
             </li>
 
-            {/* {user?.email ? (
+            {user?.email ? (
               <li>
-                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                  <Link to="/dashboard" className="justify-between">
-                    Dashboard
-                  </Link>
+                <button
+                  onClick={handlaLogout}
+                  className="btn-sm btn-outline btn-accent mx-2 rounded-lg "
+                >
+                  Logout
                 </button>
               </li>
             ) : (
@@ -108,19 +127,9 @@ export default function Navbar() {
                   <Link to="/login">Login</Link>
                 </button>
               </li>
-            )} */}
+            )}
           </ul>
         </div>
-        {/* <div className="navbar-end">
-          {user?.email && (
-            <>
-              <div className="badge badge-outline">{user?.email}</div>
-              <button onClick={handleSignOut} className="btn">
-                Sign Out
-              </button>
-            </>
-          )}
-        </div> */}
       </div>
     </div>
   );
