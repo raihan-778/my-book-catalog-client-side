@@ -35,22 +35,10 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user, isLoading } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(user);
-        dispatch(setUser(user as unknown as string)); // Assuming setUser action correctly handles a 'User' object
-      }
-
-      dispatch(setLoading(false));
-    });
-
-    return () => unsubscribe();
-  }, [dispatch]);
 
   const onSubmit = (data: LoginFormInputs) => {
     console.log(data);
@@ -66,12 +54,19 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (user.email && !isLoading) {
-      toast.success(`User ${user.email} login Successfully`);
-      navigate(from, { replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.email, isLoading]);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        toast.success(`User ${user?.email} login Successfully`);
+        console.log(user);
+        navigate(from, { replace: true });
+        dispatch(setUser(user as unknown as string));
+      }
+
+      dispatch(setLoading(false));
+    });
+
+    return () => unsubscribe();
+  }, [dispatch, from, navigate]);
 
   return (
     <div className="flex bg-[#0A2647] my-5 mx-auto  h-[800px] justify-center  items-center">
