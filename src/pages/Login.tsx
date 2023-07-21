@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppDispatch } from '../redux/hooks';
 import { useForm } from 'react-hook-form';
 import {
   googleLoginUser,
@@ -36,7 +36,7 @@ export default function Login() {
     formState: { errors },
   } = useForm<LoginFormInputs>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { user, isLoading } = useAppSelector((state) => state.user);
+  // const { user, isLoading } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
 

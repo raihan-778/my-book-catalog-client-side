@@ -8,13 +8,10 @@ import {
 } from '../../redux/features/books/bookSlice';
 
 export default function BookCard() {
-  const { data } = useGetAllBooksQuery(undefined);
-
+  const dispatch = useAppDispatch();
   const { categoryFilter, searchQuery } = useAppSelector(
     (state) => state.filter
   );
-
-  const dispatch = useAppDispatch();
 
   const handleCategoryChange = (event: { target: { value: unknown } }) => {
     dispatch(setCategoryFilter(event.target.value));
@@ -23,6 +20,8 @@ export default function BookCard() {
   const handleSearchChange = (event: { target: { value: unknown } }) => {
     dispatch(setSearchQuery(event.target.value));
   };
+  const { data } = useGetAllBooksQuery(undefined);
+
   return (
     <>
       <input
