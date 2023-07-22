@@ -6,6 +6,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import { auth } from '../../../lib/firebase';
+import { toast } from 'react-toastify';
 
 interface IUserState {
   user: {
@@ -32,6 +33,18 @@ interface ICredential {
   email: string;
   password: string;
 }
+interface UserData {
+  email: string | null;
+  name?: {
+    firstName: string | null;
+    lastName: string | null;
+  };
+}
+
+interface StateType {
+  user: UserData | null;
+  isLoading: boolean;
+}
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -39,7 +52,6 @@ export const createUser = createAsyncThunk(
   'user/create-user',
   async ({ email, password }: ICredential) => {
     const data = await createUserWithEmailAndPassword(auth, email, password);
-
     return data.user.email;
   }
 );
@@ -48,6 +60,9 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }: ICredential) => {
     const data = await signInWithEmailAndPassword(auth, email, password);
     console.log(data);
+    data.user.email &&
+      toast.success(`User ${data.user?.email} login Successfully`);
+
     return data.user.email;
   }
 );
@@ -55,6 +70,8 @@ export const googleLoginUser = createAsyncThunk(
   'user/google-login-user',
   async () => {
     const data = await signInWithPopup(auth, googleProvider);
+    data.user.email &&
+      toast.success(`User ${data.user?.email} login Successfully`);
     return data.user.email;
   }
 );
@@ -63,8 +80,8 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<string | null>) => {
-      state.user.email = action.payload;
+    setUser: (state: StateType, action: PayloadAction<UserData | null>) => {
+      state.user = action.payload;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;

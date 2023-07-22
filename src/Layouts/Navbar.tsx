@@ -15,11 +15,10 @@ export default function Navbar() {
     setFix(false);
   };
 
-  const { user } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user);
+  console.log(user?.email);
   const dispatch = useAppDispatch();
   const handlaLogout = () => {
-    console.log('logout');
-
     signOut(auth).then(() => {
       dispatch(setUser(null));
     });

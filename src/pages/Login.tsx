@@ -11,19 +11,11 @@ import {
 } from '../redux/features/user/userSlice';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { toast } from 'react-toastify';
-
-// if (user) {
-//   navigate(from, { replace: true });
-// }
 
 interface LoginFormInputs {
   email: string;
   password: string;
 }
-// if (user) {
-//   navigate(from, { replace: true });
-// }
 
 export default function Login() {
   const location = useLocation();
@@ -40,33 +32,58 @@ export default function Login() {
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      const userData = JSON.parse(storedUserData);
+      console.log(userData);
+      dispatch(setUser(userData));
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user.email);
+        navigate(from, { replace: true });
+        dispatch(setUser(user as unknown as string));
+      }
+
+      dispatch(setLoading(false)); // Mark the loading process as completed
+    });
+
+    return () => unsubscribe();
+  }, [dispatch, from, navigate]);
+
   const onSubmit = (data: LoginFormInputs) => {
     console.log(data);
+
     dispatch(
       loginUser({
         email: data.email,
         password: data.password,
       })
     );
+    const userData = {
+      email: data.email,
+    };
+    dispatch(setUser(userData));
+    localStorage.setItem('userData', JSON.stringify(userData));
   };
   const googleLogin = () => {
     dispatch(googleLoginUser());
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        toast.success(`User ${user?.email} login Successfully`);
-        console.log(user);
-        navigate(from, { replace: true });
-        dispatch(setUser(user as unknown as string));
-      }
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       console.log(user);
+  //       navigate(from, { replace: true });
+  //     }
+  //   });
 
-      dispatch(setLoading(false));
-    });
+  //   dispatch(setLoading(false)); // Mark the loading process as completed
 
-    return () => unsubscribe();
-  }, [dispatch, from, navigate]);
+  //   return () => unsubscribe();
+  // }, [dispatch, from, navigate]);
 
   return (
     <div className="flex bg-[#0A2647] my-5 mx-auto  h-[800px] justify-center  items-center">
