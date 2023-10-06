@@ -1,166 +1,70 @@
-import { useEffect } from 'react';
-
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../redux/hooks';
-import { useForm } from 'react-hook-form';
-import {
-  googleLoginUser,
-  loginUser,
-  setLoading,
-  setUser,
-} from '../redux/features/user/userSlice';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../lib/firebase';
-
-interface LoginFormInputs {
-  email: string;
-  password: string;
-}
+import { Link } from 'react-router-dom';
+import logo from '../assets/images/logo.book-store.avif';
+import { LoginForm } from '../components/LoginForm';
+import { buttonVariants } from '../components/ui/button';
+import { cn } from '../lib/utils';
 
 export default function Login() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const from = location.state?.from?.pathname || '/';
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormInputs>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const { user, isLoading } = useAppSelector((state) => state.user);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const storedUserData = localStorage.getItem('userData');
-    if (storedUserData) {
-      const userData = JSON.parse(storedUserData);
-      console.log(userData);
-      dispatch(setUser(userData));
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(user.email);
-        navigate(from, { replace: true });
-        dispatch(setUser(user as unknown as string));
-      }
-
-      dispatch(setLoading(false)); // Mark the loading process as completed
-    });
-
-    return () => unsubscribe();
-  }, [dispatch, from, navigate]);
-
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log(data);
-
-    dispatch(
-      loginUser({
-        email: data.email,
-        password: data.password,
-      })
-    );
-    const userData = {
-      email: data.email,
-    };
-    dispatch(setUser(userData));
-    localStorage.setItem('userData', JSON.stringify(userData));
-  };
-  const googleLogin = () => {
-    dispatch(googleLoginUser());
-  };
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       console.log(user);
-  //       navigate(from, { replace: true });
-  //     }
-  //   });
-
-  //   dispatch(setLoading(false)); // Mark the loading process as completed
-
-  //   return () => unsubscribe();
-  // }, [dispatch, from, navigate]);
-
   return (
-    <div className="flex bg-[#0A2647] my-5 mx-auto  h-[800px] justify-center  items-center">
-      <div>
-        <h2 className="text-xl  font-bold">Login</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Enter Your Email</span>
-            </label>
-            <input
-              className="input input-bordered w-full max-w-xs"
-              id="email"
-              placeholder="name@example.com"
-              type="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              {...register('email', { required: 'Email is required' })}
-            />
-
-            {errors.email && (
-              <p className="text-red-500" role="alert">
-                {errors.email?.message}
-              </p>
-            )}
-          </div>
-          <div className="form-control w-full max-w-xs">
-            <label className="label">
-              <span className="label-text">Enter Password</span>
-            </label>
-            <input
-              className="input input-bordered w-full max-w-xs"
-              id="password"
-              placeholder="your password"
-              type="password"
-              autoCapitalize="none"
-              autoComplete="password"
-              {...register('password', { required: 'Password is required' })}
-            />
-
-            {errors.password && (
-              <p className="text-red-500" role="alert">
-                {errors.password?.message}
-              </p>
-            )}
-          </div>
-          <label className="label">
-            <span className="label-text">Forgot Password?</span>
-          </label>
-
-          <input
-            className="btn mt-5 w-full max-w-xs btn-accent"
-            value="Login"
-            type="submit"
-          />
-
-          {errors && (
-            <p className="text-orange-500 font-semibold">
-              Wrong email or Password!!
-            </p>
+    <>
+      <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+        <Link
+          to="/signup"
+          className={cn(
+            buttonVariants({ variant: 'ghost', size: 'sm' }),
+            'absolute right-4 top-4 md:right-8 md:top-8'
           )}
-
-          <label className="label">
-            <span className="label-text">
-              New to My Book Catalog
-              <Link to="/signup" className="text-secondary">
-                Create New Account.
+        >
+          Signup
+        </Link>
+        <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+          <div
+            className="absolute inset-0 bg-cover"
+            style={{
+              backgroundImage:
+                'url(https://images.unsplash.com/photo-1590069261209-f8e9b8642343?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1376&q=80)',
+            }}
+          />
+          <div className="relative z-20 flex items-center text-lg font-medium">
+            <Link to="/">
+              <img className="h-8" src={logo} alt="" />
+            </Link>
+          </div>
+          <div className="relative z-20 mt-auto">
+            <blockquote className="space-y-2"></blockquote>
+          </div>
+        </div>
+        <div className="lg:p-8">
+          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+            <div className="flex flex-col space-y-2 text-center">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Login to your account
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Enter your email below
+              </p>
+            </div>
+            <LoginForm />
+            <p className="px-8 text-center text-sm text-muted-foreground">
+              By clicking continue, you agree to our{' '}
+              <Link
+                to="/terms"
+                className="underline underline-offset-4 hover:text-primary"
+              >
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link
+                to="/privacy"
+                className="underline underline-offset-4 hover:text-primary"
+              >
+                Privacy Policy
               </Link>
-            </span>
-          </label>
-          <div className="divider">OR</div>
-          <button onClick={googleLogin} className="btn btn-outline w-full">
-            CONTINUE WITH GOOGLE
-          </button>
-        </form>
+              .
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

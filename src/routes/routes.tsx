@@ -3,11 +3,13 @@ import App from '../App';
 import Home from '../pages/Home';
 
 import BookDetails from '../pages/BookDetails';
-import PrivateRoute from './PrivateRoute';
 import EditBook from '../pages/EditBook';
+import PrivateRoute from './PrivateRoute';
 
 import NotFound from '../pages/NotFound';
-import Books from '../pages/Books';
+
+import AddBook from '../pages/AddBook';
+import AllBooks from '../pages/AllBooks';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
 
@@ -21,8 +23,8 @@ const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/books',
-        element: <Books />,
+        path: '/all-books',
+        element: <AllBooks />,
       },
       {
         path: '/book-details/:id',
@@ -33,6 +35,22 @@ const routes = createBrowserRouter([
         element: (
           <PrivateRoute>
             <EditBook />,
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/add-book',
+        element: (
+          <PrivateRoute>
+            <AddBook />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/singleBook/:id',
+        element: (
+          <PrivateRoute>
+            <BookDetails />
           </PrivateRoute>
         ),
       },

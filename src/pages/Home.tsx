@@ -1,5 +1,5 @@
 import Footer from '../Layouts/Footer';
-import TopListedBooks from '../components/ui/TopListedBooks';
+import TopListedBooks from '../components/TopListedBooks';
 export default function Home() {
   return (
     <>

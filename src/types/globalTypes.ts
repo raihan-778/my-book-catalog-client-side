@@ -2,10 +2,10 @@ export type IBook = {
   _id: string;
   title: string;
   image?: string;
-  author: number;
+  author: string;
   genre: string;
   publicationDate: string;
-  Reviewa: string[];
+  Review: string[];
 };
 
 export type IUser = {

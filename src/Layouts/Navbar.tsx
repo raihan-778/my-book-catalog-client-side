@@ -1,135 +1,124 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setUser } from '../redux/features/user/userSlice';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { signOut } from 'firebase/auth';
+import { HiOutlineSearch } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import logo from '../assets/images/logo.book-store.avif';
+import Cart from '../components/Cart';
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avater';
+import { Button } from '../components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../components/ui/dropdown-menu';
 import { auth } from '../lib/firebase';
+import { setUser } from '../redux/features/user/userSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 export default function Navbar() {
-  const [fix, setFix] = useState(false);
-
-  const setFixed = () => {
-    if (window.scrollY >= 392) {
-      setFix(true);
-    }
-    setFix(false);
-  };
-
-  const user = useAppSelector((state) => state.user);
-  console.log(user?.email);
+  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
-  const handlaLogout = () => {
+  const handleLogout = () => {
     signOut(auth).then(() => {
+      toast.success('Successfully Logout');
       dispatch(setUser(null));
     });
   };
-
-  window.addEventListener('scroll', setFixed);
   return (
-    <div className={fix ? `fixed` : undefined}>
-      <div className={'navbar bg-[#ECECEC] shadow-xl text-sky-400'}>
-        <div className="navbar-start">
-          <div className="dropdown">
-            <label tabIndex={0} className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </label>
-            <ul
-              tabIndex={0}
-              className="menu menu-compact bg-[#ECECEC] dropdown-content mt-3 p-2 shadow text-slate-600 rounded-box w-52"
-            >
-              <Link to="/">
-                <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
-                  Home
-                </button>
-              </Link>
-              <Link to="/books">
-                <button className="btn-sm btn-outline btn-accent my-2 rounded-lg ">
-                  All Books
-                </button>
-              </Link>
-              {user?.email ? (
-                <li>
-                  <button
-                    onClick={handlaLogout}
-                    className="btn-sm btn-outline btn-accent mx-2 rounded-lg "
-                  >
-                    Logout
-                  </button>
-                </li>
+    <nav className="w-full h-16 fixed top backdrop-blur-lg z-10">
+      <div className="h-full w-full bg-white/60">
+        <div className="flex items-center justify-between w-full md:max-w-7xl h-full mx-auto ">
+          <div>
+            <img className="h-20" src={logo} alt="logo" />
+          </div>
+          <div>
+            <ul className="flex items-center">
+              <li>
+                <Button variant="link" asChild>
+                  <Link to="/">Home</Link>
+                </Button>
+              </li>
+              <li>
+                <Button variant="link" asChild>
+                  <Link to="/all-books">All Books</Link>
+                </Button>
+              </li>
+              {!user?.email ? (
+                <>
+                  <li>
+                    <Button variant="link" asChild>
+                      <Link to="/login">Login</Link>
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="link" asChild>
+                      <Link to="/signup">Signup</Link>
+                    </Button>
+                  </li>
+                </>
               ) : (
-                <li>
-                  <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                    <Link to="/login">Login</Link>
-                  </button>
-                </li>
+                <>
+                  <li>
+                    <Button variant="link" asChild>
+                      <Link to="/add-book">Add Book</Link>
+                    </Button>
+                  </li>
+                  <li>
+                    <Button variant="link" asChild onClick={handleLogout}>
+                      <Link to="/">Logout</Link>
+                    </Button>
+                  </li>
+                </>
               )}
+              <li>
+                <Button variant="ghost">
+                  <HiOutlineSearch size="25" />
+                </Button>
+              </li>
+              <li>
+                <Cart />
+              </li>
+              <li className="ml-5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="outline-none">
+                    <Avatar>
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuSeparator />
+                    {!user.email ? (
+                      <>
+                        <Link to="/login">
+                          <DropdownMenuItem className="cursor-pointer">
+                            Login
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link to="/signup">
+                          <DropdownMenuItem className="cursor-pointer">
+                            Signup
+                          </DropdownMenuItem>
+                        </Link>
+                      </>
+                    ) : (
+                      <DropdownMenuItem
+                        onClick={handleLogout}
+                        className="cursor-pointer"
+                      >
+                        Logout
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </li>
             </ul>
           </div>
-          <div className="avatar online placeholder">
-            <div className="bg-neutral-focus text-neutral-content rounded-full w-12">
-              <img src="/book-logo.jpg" alt="logo" />
-            </div>
-          </div>
-          <Link
-            to="/"
-            className="btn btn-ghost normal-case font-semibold text-2xl"
-          >
-            MBC
-            <sub className="text-green-500">
-              <small>My Book Catalog</small>
-            </sub>
-          </Link>
-        </div>
-        <div className="navbar-center  hidden lg:flex">
-          <ul className="menu menu-horizontal p-0">
-            <li>
-              <Link to="/">
-                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                  Home
-                </button>
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/books">
-                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                  All Books
-                </button>
-              </Link>
-            </li>
-
-            {user?.email ? (
-              <li>
-                <button
-                  onClick={handlaLogout}
-                  className="btn-sm btn-outline btn-accent mx-2 rounded-lg "
-                >
-                  Logout
-                </button>
-              </li>
-            ) : (
-              <li>
-                <button className="btn-sm btn-outline btn-accent mx-2 rounded-lg ">
-                  <Link to="/login">Login</Link>
-                </button>
-              </li>
-            )}
-          </ul>
         </div>
       </div>
-    </div>
+    </nav>
   );
 }

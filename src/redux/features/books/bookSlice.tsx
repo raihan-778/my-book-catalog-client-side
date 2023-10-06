@@ -1,22 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { IBook } from '../../../types/globalTypes';
 
-const initialState = {
-  categoryFilter: '', // Stores the selected category for filtering
-  searchQuery: '', // Stores the search query string
+const initialState: IRecentBook = {
+  books: [],
+  publicationRange: 2023,
+  searchBooks: '',
 };
 
-const filtersSlice = createSlice({
-  name: 'filters',
+export const addBook = createAsyncThunk(
+  'books/addBook',
+  async (bookData: IBook) => {
+    return bookData;
+  }
+);
+export const filterBooksSlice = createSlice({
+  name: 'books',
   initialState,
   reducers: {
-    setCategoryFilter: (state, action) => {
-      state.categoryFilter = action.payload;
+    recentBooks: (state) => {
+      state.books;
     },
-    setSearchQuery: (state, action) => {
-      state.searchQuery = action.payload;
+    allBooks: (state) => {
+      state.books;
+    },
+    setPublicationRange: (state, action: PayloadAction<number>) => {
+      state.publicationRange = action.payload;
+    },
+    getSearchBooks: (state, action: PayloadAction<string>) => {
+      state.searchBooks = action.payload;
     },
   },
 });
 
-export const { setCategoryFilter, setSearchQuery } = filtersSlice.actions;
-export default filtersSlice.reducer;
+interface IRecentBook {
+  books: IBook[];
+  publicationRange: number;
+  searchBooks: string;
+}
+
+export const { recentBooks, allBooks, setPublicationRange, getSearchBooks } =
+  filterBooksSlice.actions;
+export default filterBooksSlice.reducer;
