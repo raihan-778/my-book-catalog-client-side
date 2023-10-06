@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
-import { cn } from '../lib/utils';
-
-import { Button } from '@radix-ui/themes';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { cn } from '../lib/utils';
 import { loginUser } from '../redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+import { toast } from './ui/use-toast';
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 interface LoginFormInputs {
@@ -23,14 +22,15 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
-
   const { user, isLoading } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const onSubmit = (data: LoginFormInputs) => {
     dispatch(loginUser({ email: data.email, password: data.password }));
     navigate('/');
-    toast.success('Successfully login!');
+    toast({
+      description: 'Successfully login!',
+    });
   };
   React.useEffect(() => {
     if (user.email && !isLoading) {

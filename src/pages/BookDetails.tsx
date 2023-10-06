@@ -1,17 +1,17 @@
-import { Button } from '../components/ui/button';
-import { useNavigate, useParams } from 'react-router-dom';
-import {
-  useBookEditMutation,
-  useDeleteBookMutation,
-  useSingleBookQuery,
-} from '../redux/features/books/booksApi';
-import BookReview from '../components/BookReview';
 import { useState } from 'react';
-import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
-import { Label } from '../components/ui/label';
+import Modal from 'react-modal';
+import { useNavigate, useParams } from 'react-router-dom';
+import BookReview from '../components/BookReview';
+import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
 import { toast } from '../components/ui/use-toast';
+import {
+  useDeleteBookMutation,
+  useEditBookMutation,
+  useSingleBookQuery,
+} from '../redux/features/books/bookApi';
 
 interface AddBookFormInputs {
   title: string;
@@ -24,7 +24,7 @@ export default function BookDetails() {
   const { id } = useParams();
   const { data: book } = useSingleBookQuery(id);
   const [deleteBook] = useDeleteBookMutation();
-  const [bookEdit] = useBookEditMutation();
+  const [bookEdit] = useEditBookMutation();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
