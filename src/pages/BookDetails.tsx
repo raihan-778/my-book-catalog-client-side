@@ -23,6 +23,8 @@ interface AddBookFormInputs {
 export default function BookDetails() {
   const { id } = useParams();
   const { data: book } = useSingleBookQuery(id);
+
+  console.log('single-book', book?.data.title);
   const [deleteBook] = useDeleteBookMutation();
   const [bookEdit] = useEditBookMutation();
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ export default function BookDetails() {
     const result = await bookEdit({ id, data });
     if (result) {
       toast({
-        description: `${book?.title} is edited Successfully!`,
+        description: `${book?.data?.title} is edited Successfully!`,
       });
       setIsModalOpen(false);
       reset();
@@ -45,7 +47,9 @@ export default function BookDetails() {
   };
   const handleDeleteBook = async () => {
     try {
-      await deleteBook(id);
+      const result = await deleteBook(id);
+      console.log(result);
+
       toast({
         description: 'Book Deleted Successfully!',
       });
@@ -59,13 +63,15 @@ export default function BookDetails() {
     <>
       <div className="flex w-10/12 mx-auto items-center pb-4 border-b-4 border-gray-300 gap-6">
         <div className="w-[50%]">
-          <img src={book?.img} alt={book?.title} />
+          <img src={book?.data?.img} alt={book?.data?.title} />
         </div>
         <div className="w-[50%] space-y-3">
-          <h1 className="text-3xl font-semibold">Title: {book?.title}</h1>
-          <p className="text-xl">Author: {book?.author}</p>
-          <p className="text-xl">Genre: {book?.genre}</p>
-          <p className="text-xl">Publication Date: {book?.publication}</p>
+          <h1 className="text-3xl font-semibold">Title: {book?.data?.title}</h1>
+          <p className="text-xl">Author: {book?.data?.author}</p>
+          <p className="text-xl">Genre: {book?.data?.genre}</p>
+          <p className="text-xl">
+            Publication Date: {book?.data?.publicationDate}
+          </p>
           <div className="flex w-4/12 gap-4">
             <Button onClick={() => setIsModalOpen(true)}>Edit</Button>
             <Button

@@ -5,18 +5,17 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 
-import { useAddNewBookMutation } from '../redux/features/books/bookApi';
-
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAddNewBookMutation } from '../redux/features/books/bookApi';
 
 type AddBookFormProps = React.HTMLAttributes<HTMLDivElement>;
 interface AddBookFormInputs {
   title: string;
   author: string;
   genre: string;
-  publication: number;
-  img: string;
+  publicationDate: string;
+  img?: string;
   comments: string[];
 }
 
@@ -31,12 +30,15 @@ export function AddBookForm({ className, ...props }: AddBookFormProps) {
 
   const [addBook] = useAddNewBookMutation();
   const onSubmit = async (data: AddBookFormInputs) => {
+    console.log(data);
     const result = await addBook(data);
-    toast.done('Book Added Successfully!');
+
     if (result) {
+      toast.done('Book Added Successfully!');
       reset();
       navigate('/');
     }
+    console.log(result);
   };
 
   return (
@@ -75,16 +77,16 @@ export function AddBookForm({ className, ...props }: AddBookFormProps) {
             />
             {errors.genre && <p>{errors.genre.message}</p>}
             <Input
-              id="publication"
+              id="publicationDate"
               placeholder="type publication"
               type="text"
               autoCapitalize="none"
               autoCorrect="off"
-              {...register('publication', {
+              {...register('publicationDate', {
                 required: 'publication is required!',
               })}
             />
-            {errors.publication && <p>{errors.publication.message}</p>}
+            {errors.publicationDate && <p>{errors.publicationDate.message}</p>}
             <Input
               id="image"
               placeholder="type image url"

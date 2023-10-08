@@ -48,6 +48,7 @@ export default function AllBooks() {
     }
   } else {
     books = data?.data;
+    console.log('all-books', books);
     if (searchBooks) {
       searchData = books?.filter((item: IBook) => {
         const lowerCaseGenre = item.genre.toLowerCase();

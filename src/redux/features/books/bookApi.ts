@@ -4,7 +4,7 @@ import { api } from '../../api/apiSlice';
 const bookApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getRecentBooks: builder.query({
-      query: () => '/recent-book',
+      query: () => '/books?publicationDate=desc',
       providesTags: [{ type: 'books' }],
     }),
     getAllBooks: builder.query({
@@ -16,14 +16,14 @@ const bookApi = api.injectEndpoints({
     }),
     deleteBook: builder.mutation({
       query: (id) => ({
-        url: `/book/${id}`,
+        url: `/books/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'books' }],
     }),
     editBook: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/book/${id}`,
+        url: `/books/${id}`,
         method: 'PATCH',
         body: data,
       }),
@@ -31,7 +31,7 @@ const bookApi = api.injectEndpoints({
     }),
     addNewBook: builder.mutation<IBook, Partial<IBook>>({
       query: (newBook) => ({
-        url: '/book',
+        url: '/books/add-new-book',
         method: 'POST',
         body: newBook,
       }),
